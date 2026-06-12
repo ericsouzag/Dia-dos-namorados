@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Paloma, com amor ❤️</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:#fff5f8;color:#3a1020;}
+#lock-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#fbeaf0,#f4c0d1,#fbeaf0);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:20px;overflow:hidden;}
+#petals-container{position:absolute;width:100%;height:100%;pointer-events:none;}
+.petal{position:absolute;font-size:22px;animation:fall linear infinite;opacity:0.7;}
+@keyframes fall{0%{transform:translateY(-50px) rotate(0deg);opacity:.8}100%{transform:translateY(110vh) rotate(360deg);opacity:.1}}
+.lock-box{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:18px;padding:2rem;background:rgba(255,255,255,0.85);border-radius:20px;max-width:380px;width:90%;border:1px solid #ED93B1;}
+.lock-icon{font-size:48px;}
+.lock-box h2{font-size:17px;font-weight:600;color:#4B1528;text-align:center;}
+.lock-question{font-size:16px;font-weight:600;color:#D4537E;text-align:center;padding:12px 16px;background:#fbeaf0;border-radius:12px;border:1px solid #ED93B1;}
+.lock-input{padding:10px 16px;border-radius:10px;border:1.5px solid #ED93B1;font-size:15px;width:200px;text-align:center;outline:none;color:#4B1528;}
+.lock-input:focus{border-color:#D4537E;}
+.lock-btn{padding:10px 24px;border-radius:10px;background:#D4537E;color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;}
+.lock-btn:hover{background:#993556;}
+.lock-error{color:#993556;font-size:13px;min-height:18px;}
+#main{display:none;}
+.hero{background:linear-gradient(135deg,#fbeaf0,#f4c0d1,#ed93b1);padding:60px 1.5rem 40px;text-align:center;}
+.hero-flowers{font-size:28px;letter-spacing:6px;margin-bottom:12px;}
+.hero h1{font-size:28px;font-weight:700;color:#4B1528;line-height:1.35;}
+.hero h1 span{color:#D4537E;}
+.hero-sub{font-size:15px;color:#72243E;margin-top:8px;}
+.counter-row{background:#fff;padding:1.5rem;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;border-bottom:1px solid #F4C0D1;}
+.cnt-card{background:#fbeaf0;border-radius:14px;border:1px solid #ED93B1;padding:1rem 1.25rem;text-align:center;min-width:110px;}
+.cnt-num{font-size:30px;font-weight:700;color:#D4537E;}
+.cnt-lbl{font-size:11px;color:#993556;margin-top:2px;text-transform:uppercase;letter-spacing:1px;}
+.section{padding:1.75rem 1.25rem;background:#fff;border-bottom:1px solid #F4C0D1;}
+.sec-title{font-size:12px;font-weight:600;color:#D4537E;text-transform:uppercase;letter-spacing:2px;margin-bottom:12.5rem;display:flex;align-items:center;gap:8px;}
+.music-card{background:#fbeaf0;border-radius:14px;border:1px solid #ED93B1;padding:1.25rem;display:flex;align-items:center;gap:16px;margin-bottom:12px;cursor:pointer;transition: transform 0.2s;}
+.music-card:active{transform: scale(0.98);}
+.music-icon{font-size:38px;flex-shrink:0;}
+.music-title{font-size:16px;font-weight:700;color:#4B1528;}
+.music-artist{font-size:13px;color:#993556;}
+.music-note{font-size:11px;color:#ED93B1;margin-top:4px;font-style:italic;}
+.bars{display:flex;gap:3px;align-items:flex-end;height:24px;margin-left:auto;}
+.bar{width:4px;border-radius:2px;background:#D4537E;animation:bounce ease-in-out infinite alternate;animation-play-state: paused;}
+.playing .bar{animation-play-state: running;}
+.bar:nth-child(1){height:8px;animation-duration:.6s}
+.bar:nth-child(2){height:16px;animation-duration:.4s}
+.bar:nth-child(3){height:10px;animation-duration:.7s}
+.bar:nth-child(4){height:20px;animation-duration:.5s}
+.bar:nth-child(5){height:12px;animation-duration:.65s}
+@keyframes bounce{from{transform:scaleY(.4)}to{transform:scaleY(1)}}
+.letter-card{background:#fbeaf0;border-radius:14px;border:1px solid #ED93B1;padding:1.5rem;}
+.letter-text{font-size:15px;line-height:1.9;color:#4B1528;white-space:pre-wrap;font-family:Georgia,serif;}
+.letter-sign{margin-top:1rem;font-size:14px;color:#993556;font-style:italic;text-align:right;}
+.edit-bar{background:#F4C0D1;border-radius:10px;padding:8px 14px;font-size:12px;color:#72243E;text-align:center;margin-bottom:10px;}
+.edit-box{background:#fbeaf0;border-radius:12px;border:1.5px dashed #ED93B1;padding:1rem;margin-top:10px;}
+.edit-lbl{font-size:12px;font-weight:600;color:#993556;margin-bottom:4px;}
+.edit-input{width:100%;padding:8px 12px;border-radius:8px;border:1px solid #ED93B1;font-size:14px;color:#4B1528;background:#fff;outline:none;font-family:inherit;margin-bottom:8px;}
+.edit-textarea{width:100%;padding:8px 12px;border-radius:8px;border:1px solid #ED93B1;font-size:14px;color:#4B1528;background:#fff;outline:none;font-family:Georgia,serif;min-height:80px;resize:vertical;line-height:1.7;}
+.edit-input:focus,.edit-textarea:focus{border-color:#D4537E;}
+.edit-btn{padding:7px 18px;border-radius:8px;background:#D4537E;color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px;}
+.edit-btn:hover{background:#993556;}
+.photos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.photo-item{display:flex;flex-direction:column;gap:4px;align-items:center;}
+.photo-slot{aspect-ratio:1;border-radius:12px;border:1.5px dashed #ED93B1;background:#fbeaf0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;overflow:hidden;position:relative;width:100%;}
+.photo-slot:hover{background:#f4c0d1;}
+.photo-slot img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;}
+.photo-caption{padding:3px 6px;border-radius:6px;border:1px solid #ED93B1;font-size:18px;color:#4B1528;background:#fff;outline:none;text-align:center;width:44px;}
+.photo-caption:focus{border-color:#D4537E;}
+.timeline{padding-left:22px;position:relative;}
+.timeline::before{content:'';position:absolute;left:7px;top:6px;width:1px;height:calc(100% - 12px);background:#ED93B1;}
+.tl-item{position:relative;margin-bottom:1.75rem;}
+.tl-item:last-child{margin-bottom:0;}
+.tl-dot{position:absolute;left:-19px;top:4px;width:12px;height:12px;border-radius:50%;background:#D4537E;border:2px solid #fff5f8;}
+.tl-date{font-size:12px;color:#D4537E;font-weight:600;margin-bottom:2px;}
+.tl-title{font-size:15px;font-weight:700;color:#4B1528;margin-bottom:4px;}
+.tl-desc{font-size:13px;color:#72243E;line-height:1.6;}
+footer{text-align:center;padding:2rem;font-size:14px;color:#993556;background:#fbeaf0;}
+footer span{font-size:22px;}
+</style>
+</head>
+<body>
+
+<!-- Elemento de áudio -->
+<audio id="bg-music" loop>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<div id="lock-screen">
+  <div id="petals-container"></div>
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2>Acesso Restrito</h2>
+    <div class="lock-question">Qual a data do nosso primeiro beijo? (DD/MM/AAAA)</div>
+    <input type="text" class="lock-input" placeholder="00/00/0000" id="unlock-pass">
+    <div class="lock-error" id="error-msg"></div>
+    <button class="lock-btn" onclick="checkPass()">Entrar</button>
+  </div>
+</div>
+
+<div id="main">
+  <div class="hero">
+    <div class="hero-flowers">🌸✨🌷✨🌸</div>
+    <h1>Para Paloma,<br><span>Com todo meu amor</span></h1>
+    <p class="hero-sub">Cada segundo ao seu lado é um presente.</p>
+  </div>
+
+  <div class="counter-row">
+    <div class="cnt-card">
+      <div class="cnt-num" id="days">0</div>
+      <div class="cnt-lbl">Dias</div>
+    </div>
+    <div class="cnt-card">
+      <div class="cnt-num" id="hours">0</div>
+      <div class="cnt-lbl">Horas</div>
+    </div>
+    <div class="cnt-card">
+      <div class="cnt-num" id="mins">0</div>
+      <div class="cnt-lbl">Min</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">🎵 Nossa Trilha Sonora</div>
+    <div class="music-card" id="music-card" onclick="toggleMusic()">
+      <div class="music-icon">💿</div>
+      <div>
+        <div class="music-title">Nossa Música</div>
+        <div class="music-artist">Toque para dar play/pause</div>
+        <div class="music-note">Sincronizado com o nosso amor</div>
+      </div>
+      <div class="bars">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">💌 Uma cartinha para você</div>
+    <div class="letter-card">
+      <div class="letter-text" id="letter-content">Escreva aqui sua mensagem especial...</div>
+      <div class="letter-sign">— Com amor, Seu Nome</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">📸 Nossos Momentos</div>
+    <div class="photos-grid">
+      <!-- Repetir slots de fotos conforme necessário -->
+      <div class="photo-item">
+        <div class="photo-slot"><span>+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Feito com <span>❤️</span> para Paloma</p>
+  </footer>
+</div>
+
+<script>
+const music = document.getElementById('bg-music');
+const musicCard = document.getElementById('music-card');
+
+function toggleMusic() {
+  if (music.paused) {
+    music.play();
+    musicCard.classList.add('playing');
+  } else {
+    music.pause();
+    musicCard.classList.remove('playing');
+  }
+}
+
+function checkPass() {
+  const input = document.getElementById('unlock-pass').value;
+  // Altere para a data correta
+  if (input === "12/06/2023") {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+    // Tenta tocar a música após o clique no botão de entrar (interação do usuário)
+    music.play().then(() => {
+      musicCard.classList.add('playing');
+    }).catch(e => console.log("Auto-play bloqueado, aguardando clique na música."));
+  } else {
+    document.getElementById('error-msg').innerText = "Data incorreta, tente novamente ❤️";
+  }
+}
+
+// Gerar pétalas
+function createPetals() {
+  const container = document.getElementById('petals-container');
+  const symbols = ['🌸', '❤️', '✨', '🌷'];
+  for (let i = 0; i < 20; i++) {
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    petal.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+    petal.style.left = Math.random() * 100 + 'vw';
+    petal.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    petal.style.delay = Math.random() * 5 + 's';
+    container.appendChild(petal);
+  }
+}
+createPetals();
+
+// Contador (Exemplo de data: 12 de Junho de 2023)
+const startDate = new Date("2023-06-12T00:00:00").getTime();
+function updateCounter() {
+  const now = new Date().getTime();
+  const diff = now - startDate;
+  document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+  document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+}
+setInterval(updateCounter, 1000);
+updateCounter();
+</script>
+
+</body>
+</html>
